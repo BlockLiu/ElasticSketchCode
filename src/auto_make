@@ -1,0 +1,10 @@
+#!/bin/sh
+
+
+cd MultiCore; make
+
+
+cd ../CPU/demo; make
+
+
+cd ../../GPU; ./test.sh

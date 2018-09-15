@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+cd MultiCore; rm *.o; rm *.out;
+
+
+
+cd ../GPU; rm *.o; rm *.out;
+
+
+
+cd ../CPU/demo; rm *.o; rm *.out;
+
+
+echo("finish clean!")
