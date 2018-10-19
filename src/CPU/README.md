@@ -24,9 +24,9 @@ First `make` in `demo`, and then you can test the above algorithms in `demo`.
 - `./univmon.out`: it shows you the entropy, cardinality and the estimated heavy hitters.
 
 ## Notice
-We recommend you use g++5 higher version to compile the CPU code.
-To compile with g++4 (such as g++ 4.9.2), please using the alternate version of 'std::align' (https://stackoverflow.com/questions/27064791/stdalign-not-supported-by-g4-9). Do not use 'std::align' as the name of the alternate align function, because we use 'using namespace std' in some files. So, if we don't change the function name, there will be a confliction when 'align' is included in 'std' namespace. 
-You can use 'alternative_align' or others. And when you call the align function, please remember using the new function.
+We recommend you using g++5 or higher version to compile the CPU code.
+To compile with g++4 (such as g++ 4.9.2), please use the alternate version of 'std::align' (https://stackoverflow.com/questions/27064791/stdalign-not-supported-by-g4-9). Do not use 'std::align' as the name of the alternate align function, because we use 'using namespace std' in some files. So, if we don't change the function name, there will be a confliction when 'align' is included in 'std' namespace. 
+You can use 'alternative_align' or others. And when you call the align function, please remember using the new function name.
 
 
 
