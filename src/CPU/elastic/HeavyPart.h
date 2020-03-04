@@ -30,7 +30,7 @@ public:
 		uint32_t fp;
 		int pos = CalculateFP(key, fp);	
 
-
+		/* find if there has matched bucket */
 		const __m256i item = _mm256_set1_epi32((int)fp);
 		__m256i *keys_p = (__m256i *)(buckets[pos].key);
 		int matched = 0;
@@ -38,6 +38,7 @@ public:
 		__m256i a_comp = _mm256_cmpeq_epi32(item, keys_p[0]);
 		matched = _mm256_movemask_ps((__m256)a_comp);
 
+		/* if matched */
 		if (matched != 0)
 		{
 			//return 32 if input is zero;
@@ -46,7 +47,7 @@ public:
 			return 0;
 		}
 
-
+		/* find the minimal bucket */
 		const uint32_t mask_base = 0x7FFFFFFF;
 		const __m256i *counters = (__m256i *)(buckets[pos].val);
 		__m256 masks = (__m256)_mm256_set1_epi32(mask_base);
@@ -71,7 +72,7 @@ public:
 	    matched = _mm256_movemask_ps((__m256)ct_a_comp);
 	    int min_counter = _tzcnt_u32((uint32_t)matched);
 
-
+	    /* if there has empty bucket */
 		if(min_counter_val == 0)		// empty counter
 		{
 			buckets[pos].key[min_counter] = fp;
@@ -79,7 +80,7 @@ public:
 			return 0;
 		}
 
-
+		/* update guard val and comparison */
 		uint32_t guard_val = buckets[pos].val[MAX_VALID_COUNTER];
 		guard_val = UPDATE_GUARD_VAL(guard_val);
 
