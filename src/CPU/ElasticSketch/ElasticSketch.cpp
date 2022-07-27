@@ -8,7 +8,7 @@ void ElasticSketch<bucket_num, tot_memory_in_bytes>::clear()
 }
 
 template<int bucket_num, int tot_memory_in_bytes>
-void ElasticSketch<bucket_num, tot_memory_in_bytes>::insert(uint8_t *key, int f = 1)
+void ElasticSketch<bucket_num, tot_memory_in_bytes>::insert(uint8_t *key, int f)
 {
     uint8_t swap_key[KEY_LENGTH_4];
     uint32_t swap_val = 0;
@@ -31,7 +31,7 @@ void ElasticSketch<bucket_num, tot_memory_in_bytes>::insert(uint8_t *key, int f 
 }
 
 template<int bucket_num, int tot_memory_in_bytes>
-void ElasticSketch<bucket_num, tot_memory_in_bytes>::quick_insert(uint8_t *key, int f = 1)
+void ElasticSketch<bucket_num, tot_memory_in_bytes>::quick_insert(uint8_t *key, int f)
 {
     heavy_part.quick_insert(key, f);
 }
@@ -58,23 +58,6 @@ int ElasticSketch<bucket_num, tot_memory_in_bytes>::query_compressed_part(uint8_
         return (int)GetCounterVal(heavy_result) + light_result;
     }
     return heavy_result;
-}
-
-template<int bucket_num, int tot_memory_in_bytes>
-int ElasticSketch<bucket_num, tot_memory_in_bytes>::get_compress_width(int ratio)
-{
-    return light_part.get_compress_width(ratio);
-}
-
-template<int bucket_num, int tot_memory_in_bytes>
-void ElasticSketch<bucket_num, tot_memory_in_bytes>::compress(int ratio, uint8_t *dst)
-{
-    light_part.compress(ratio, dst);
-}
-    
-template<int bucket_num, int tot_memory_in_bytes>
-int ElasticSketch<bucket_num, tot_memory_in_bytes>::get_bucket_num(){
-    return heavy_part.get_bucket_num();
 }
 
 template<int bucket_num, int tot_memory_in_bytes>
@@ -119,7 +102,7 @@ int ElasticSketch<bucket_num, tot_memory_in_bytes>::get_cardinality()
             if(GetCounterVal(val))
                 card++;
         }
-        return card;
+    return card;
 }
 
 template<int bucket_num, int tot_memory_in_bytes>

@@ -22,7 +22,7 @@ void LightPart<init_mem_in_bytes>::clear()
 }
 
 template<int init_mem_in_bytes>
-void LightPart<init_mem_in_bytes>::insert(uint8_t *key, int f = 1)
+void LightPart<init_mem_in_bytes>::insert(uint8_t *key, int f)
 {
     uint32_t hash_val = (uint32_t)bobhash->run((const char*)key, KEY_LENGTH_4);
     uint32_t pos = hash_val % (uint32_t)counter_num;

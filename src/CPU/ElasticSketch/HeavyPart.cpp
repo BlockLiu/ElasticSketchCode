@@ -26,7 +26,8 @@ int HeavyPart<bucket_num>::insert(uint8_t *key, uint8_t *swap_key, uint32_t &swa
 {
     uint32_t fp;
 	int pos = CalculateFP(key, fp);
-
+	uint32_t min_counter_val;
+	int min_counter;
 #ifdef USING_SIMD_ACCELERATION
     do{
         /* find if there has matched bucket */
@@ -61,14 +62,14 @@ int HeavyPart<bucket_num>::insert(uint8_t *key, uint8_t *swap_key, uint32_t &swa
 	    __m128i min2 = _mm_min_epi32(x,min1);
 	    __m128i min3 = _mm_shuffle_epi32(min2, _MM_SHUFFLE(0,0,0,1));
 	    __m128i min4 = _mm_min_epi32(min2,min3);
-	    int min_counter_val = _mm_cvtsi128_si32(min4);
+	    min_counter_val = _mm_cvtsi128_si32(min4);
 
         const __m256i ct_item = _mm256_set1_epi32(min_counter_val);
 	    int ct_matched = 0;
 
 	    __m256i ct_a_comp = _mm256_cmpeq_epi32(ct_item, (__m256i)results);
 	    matched = _mm256_movemask_ps((__m256)ct_a_comp);
-	    int min_counter = _tzcnt_u32((uint32_t)matched);
+	    min_counter = _tzcnt_u32((uint32_t)matched);
 
 	    /* if there has empty bucket */
 		if(min_counter_val == 0){		// empty counter
@@ -81,8 +82,9 @@ int HeavyPart<bucket_num>::insert(uint8_t *key, uint8_t *swap_key, uint32_t &swa
 #else // USING_SIMD_ACCELERATION
     do{
         /* find if there has matched bucket */
-		int matched = -1, empty = -1, min_counter = 0;
-		uint32_t min_counter_val = GetCounterVal(buckets[pos].val[0]);
+		int matched = -1, empty = -1;
+		min_counter = 0;
+		min_counter_val = GetCounterVal(buckets[pos].val[0]);
 		for(int i = 0; i < COUNTER_PER_BUCKET - 1; i++){
 			if(buckets[pos].key[i] == fp){
 				matched = i;
@@ -131,11 +133,12 @@ int HeavyPart<bucket_num>::insert(uint8_t *key, uint8_t *swap_key, uint32_t &swa
 }
 
 template<int bucket_num>
-int HeavyPart<bucket_num>::quick_insert(uint8_t *key, uint32_t f = 1)
+int HeavyPart<bucket_num>::quick_insert(uint8_t *key, uint32_t f)
 {
     uint32_t fp;
 	int pos = CalculateFP(key, fp);
-
+	uint32_t min_counter_val; 
+	int min_counter;
 #ifdef USING_SIMD_ACCELERATION
     do{
         /* find if there has matched bucket */
@@ -170,14 +173,14 @@ int HeavyPart<bucket_num>::quick_insert(uint8_t *key, uint32_t f = 1)
 	    __m128i min2 = _mm_min_epi32(x,min1);
 	    __m128i min3 = _mm_shuffle_epi32(min2, _MM_SHUFFLE(0,0,0,1));
 	    __m128i min4 = _mm_min_epi32(min2,min3);
-	    int min_counter_val = _mm_cvtsi128_si32(min4);
+	    min_counter_val = _mm_cvtsi128_si32(min4);
 
         const __m256i ct_item = _mm256_set1_epi32(min_counter_val);
 	    int ct_matched = 0;
 
 	    __m256i ct_a_comp = _mm256_cmpeq_epi32(ct_item, (__m256i)results);
 	    matched = _mm256_movemask_ps((__m256)ct_a_comp);
-	    int min_counter = _tzcnt_u32((uint32_t)matched);
+	    min_counter = _tzcnt_u32((uint32_t)matched);
 
 	    /* if there has empty bucket */
 		if(min_counter_val == 0){		// empty counter
@@ -190,8 +193,9 @@ int HeavyPart<bucket_num>::quick_insert(uint8_t *key, uint32_t f = 1)
 #else // USING_SIMD_ACCELERATION
     do{
         /* find if there has matched bucket */
-		int matched = -1, empty = -1, min_counter = 0;
-		uint32_t min_counter_val = GetCounterVal(buckets[pos].val[0]);
+		int matched = -1, empty = -1;
+		min_counter = 0;
+		min_counter_val = GetCounterVal(buckets[pos].val[0]);
 		for(int i = 0; i < COUNTER_PER_BUCKET - 1; i++){
 			if(buckets[pos].key[i] == fp){
 				matched = i;
